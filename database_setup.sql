@@ -13,13 +13,12 @@ create table machines(
 create table stock(
     machine_id  int,
     product_id  int,
-    quantiity   int
-not null default 0 check (quantity ))
--- Our stockre:
--- pednis (6)
--- coke (10)
--- void (null)
--- cocacola (0)
+    quantiity   int not null default 0 check (quantity => 0),
+    last_restock_date date not null,
+    primary key (machine_id, product_id)
+    foreign key (machine_id) references machines(machine_id)
+    foreign key (product_id) references products(product_id)
+)
 
 create table products(
     product_id int auto_increment primary key,
@@ -69,7 +68,19 @@ CREATE INDEX idx_transactions_machine ON transactions(machine_id);
 -- Indexes for maintenance_log table
 CREATE INDEX idx_maintenance_machine ON maintenance_log(machine_id);
 
+delimiter $$
 
+create trigger trigger_reduce_stock_after_sale
+after insert on transactions
+for each row
+begin
+  update stock
+     set quantity = quantity - new.amount
+   where machineid = new.machineid
+     and productid = new.productid;
+end$$
+
+delimiter ;
 
 
 
@@ -95,6 +106,7 @@ CREATE USER IF NOT EXISTS 'clerk'@'%' IDENTIFIED BY 'ClerkPass123!';
 GRANT SELECT ON Assignment4.machines TO 'clerk'@'%';
 GRANT SELECT ON Assignment4.products TO 'clerk'@'%';
 GRANT SELECT ON Assignment4.categories TO 'clerk'@'%';
+
 
 -- Apply the changes
 FLUSH PRIVILEGES;
