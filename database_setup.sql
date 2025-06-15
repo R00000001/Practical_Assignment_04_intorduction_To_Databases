@@ -18,7 +18,7 @@ create table stock(
     primary key (machine_id, product_id)
     foreign key (machine_id) references machines(machine_id)
     foreign key (product_id) references products(product_id)
-)
+) comment 'stock of each product in our machines'
 
 create table products(
     product_id int auto_increment primary key,
