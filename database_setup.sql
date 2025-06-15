@@ -114,6 +114,8 @@ FLUSH PRIVILEGES;
 -- View
 create view machines_view as  
 select  
-    machines.machine_id,
-    machines.machine_location,
-    categories.category_name
+    m.machine_id,
+    m.machine_location,
+    c.category_name
+from machines m
+join categories c on m.category_id = c.category_id;
