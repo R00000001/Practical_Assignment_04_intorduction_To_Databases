@@ -1,7 +1,7 @@
 create database if not exists assignment4;
 use assignment4;
 
--- tables (in dependency order)
+-- tables
 create table categories (
     category_id int auto_increment primary key,
     category_name varchar(50) not null unique
@@ -65,13 +65,13 @@ create table maintenance_log (
         on update cascade
 ) comment='record of all maintenance work done on machines';
 
--- indexes for performance
+-- indexes 
 create index index_machines_location on machines(machine_location);
 create index index_products_category on products(category_id);
 create index index_transactions_machine_date on transactions(machine_id, time_stamp);
 create index index_maintenance_machine on maintenance_log(machine_id);
 
--- roles and users for access control
+-- roles and users
 -- define roles
 create role r_admin;
 grant all privileges on assignment4.* to r_admin;
